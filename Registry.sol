@@ -9,7 +9,6 @@ contract Registry {
         uint256 time_of_start_of_production_period;
         uint256 time_of_stop_of_production_period;
         uint256 time_of_destruction;
-        bool veryfied;
         bool redeemed;
     }
     mapping(uint256 => Certificate) certificates;
@@ -33,10 +32,6 @@ contract Registry {
     }
 
     modifier check_certificate_valid(uint256 certificate_id) {
-        require(
-            certificates[certificate_id].veryfied,
-            "The certificate must be veryfied."
-        );
         require(
             !certificates[certificate_id].redeemed,
             "The certificate must be not redeemed."
@@ -97,6 +92,17 @@ contract Registry {
          verification_agent = new_verification_agent;
     }
 
+    function pass_certificate(
+        uint256 certificate_id,
+        address recipient
+    )
+        public
+        check_certificate_owner(certificate_id)
+        check_certificate_valid(certificate_id)
+    {
+        certificates[certificate_id].owner = recipient;
+    }
+
     function get_certificate(uint256 certificate_id)
         public
         view
@@ -108,7 +114,6 @@ contract Registry {
             uint256,
             uint256,
             uint256,
-            bool,
             bool
         )
     {
@@ -121,7 +126,6 @@ contract Registry {
             certificate.time_of_start_of_production_period,
             certificate.time_of_stop_of_production_period,
             certificate.time_of_destruction,
-            certificate.veryfied,
             certificate.redeemed
         );
     }
