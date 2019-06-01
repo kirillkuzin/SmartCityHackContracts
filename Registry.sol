@@ -92,7 +92,7 @@ contract Registry {
          verification_agent = new_verification_agent;
     }
 
-    function pass_certificate(
+    function transfer_certificate(
         uint256 certificate_id,
         address recipient
     )
